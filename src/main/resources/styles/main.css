@@ -12,3 +12,15 @@
 .button:armed {
     -fx-background-color: black;
 }
+
+.toggle-button {
+    -fx-background-color: black;
+}
+
+.toggle-button:selected {
+    -fx-background-color: red;
+}
+
+.grid-pane {
+    -fx-background-color: radial-gradient(radius 100%, blue, darkgray, black);
+}
