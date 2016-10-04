@@ -47,8 +47,8 @@ public class GameLogic {
     public void moveCard(Card card1, Card card2){
         int index = board.indexOf(card1);
         int index2 = board.indexOf(card2);
-
-        if(card1.getRank() == Card.Rank.ZERO || card2.getRank() == Card.Rank.ZERO) {
+        
+        if(card1.getRank() == Card.Rank.ZERO) {
             if (index == 0 || index == 13 || index == 26 || index == 39) {
                 if (card2.getRank() == Card.Rank.Two)
                     moveCard(index, index2);
@@ -77,6 +77,8 @@ public class GameLogic {
                     }
                 }
             }
+        }else if(card2.getRank() == Card.Rank.ZERO){
+            moveCard(card2, card1);
         }
     }
 
