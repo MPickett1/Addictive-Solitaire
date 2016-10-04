@@ -10,7 +10,8 @@ public class Card {
         H,
         C,
         D,
-        S
+        S,
+        B
     }
 
     public enum Rank{
@@ -32,8 +33,8 @@ public class Card {
 
     private Rank rank;
     private Suit suit;
-    private static Rank ranks[] = Rank.values();
     private Image image;
+    private boolean lock = false;
 
     public Card(Rank rank, Suit suit){
         this.rank = rank;
@@ -69,5 +70,12 @@ public class Card {
         return rank;
     }
 
+    public void setlock(){
+        lock = true;
+    }
+
+    public boolean getLock(){
+        return lock;
+    }
 
 }

@@ -1,23 +1,18 @@
 package main;
 
 import javafx.application.Application;
-import javafx.geometry.Rectangle2D;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        StackPane root = new StackPane();
-        ImageView imageView = new ImageView();
-        Card card = new Card(Card.Rank.Jack, Card.Suit.D);
-        imageView.setImage(card.getImage());
-        root.getChildren().add(imageView);
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        Parent root = new FXMLLoader(getClass().getClassLoader().getResource("fxml/mainMenu.fxml")).load();
+        primaryStage.setTitle("Addictive Solitaire!");
+        primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
 

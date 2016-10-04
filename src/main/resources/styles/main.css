@@ -1,0 +1,14 @@
+.button {
+    -fx-background-color: blue;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 20 0 20 0;
+}
+
+.button:hover {
+    -fx-background-color: -fx-accent;
+}
+
+.button:armed {
+    -fx-background-color: black;
+}
