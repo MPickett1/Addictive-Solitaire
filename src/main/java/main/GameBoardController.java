@@ -47,18 +47,14 @@ public class GameBoardController {
                             gameLogic.moveCard((Card) gameBoard.getChildren().get(card1), btn);
                             card1 = -1;
                             gameBoard.getChildren().clear();
-                            int x = 0;
-                            for (int y = 0; y < 52; y++){
-                                if(y%13 == 0 && y != 0)
-                                    x++;
-                                gameBoard.add(gameLogic.getBoard().get(y), y%13, x);
-                            }
+                            gameLogic.checkMoves();
+                            setBoard();
                             for(Node node : gameBoard.getChildren()){
                                 if(node.getClass().getSimpleName().equals("Card")){
                                     ((Card) node).selectedProperty().setValue(false);
                                 }
                             }
-                            gameLogic.checkMoves();
+
                         }
                     }else {
                         card1 = -1;
@@ -67,10 +63,11 @@ public class GameBoardController {
             }
         }
 
-
         Collections.shuffle(gameLogic.getBoard());
-        System.out.println(gameLogic.checkBoard());
+        setBoard();
+    }
 
+    private void setBoard(){
         int x = 0;
         for (int y = 0; y < 52; y++){
             if(y%13 == 0 && y != 0)

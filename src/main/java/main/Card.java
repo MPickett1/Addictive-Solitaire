@@ -70,10 +70,6 @@ public class Card extends ToggleButton{
         setGraphic(imageView);
     }
 
-    public Image getImage(){
-        return image;
-    }
-
     public Suit getSuit(){
         return suit;
     }
@@ -82,8 +78,8 @@ public class Card extends ToggleButton{
         return rank;
     }
 
-    public void setLock(){
-        lock = true;
+    public void setLock(boolean bool){
+        lock = bool;
     }
 
     public boolean getLock(){
