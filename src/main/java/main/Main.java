@@ -10,12 +10,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = new FXMLLoader(getClass().getClassLoader().getResource("fxml/mainMenu.fxml")).load();
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("fxml/mainMenu.fxml"));
         primaryStage.setTitle("Addictive Solitaire!");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
-
 
     public static void main(String[] args) {
         launch(args);

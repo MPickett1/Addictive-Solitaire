@@ -65,16 +65,24 @@ public class GameLogic {
                     }
                 }
             } else {
-                if (board.get(index - 1).getRank() != Card.Rank.King && board.get(index - 1).getRank() == Card.Rank.ZERO) {
-                    if (board.get(index - 1).getSuit() == card2.getSuit()) {
-                        if (board.get(index - 1).getRank().ordinal() == card2.getRank().ordinal() - 1) {
-                            moveCard(index, index2);
-                            return;
+                if (board.get(index - 1).getRank() != Card.Rank.King) {
+                    if (board.get(index - 1).getRank() == Card.Rank.ZERO && !board.get(index - 1).getLock()) {
+                        if (board.get(index + 1).getSuit() == card2.getSuit()) {
+                            if (board.get(index + 1).getRank().ordinal() == card2.getRank().ordinal() + 1) {
+                                moveCard(index, index2);
+                            }
                         }
-                    }
-                    if (board.get(index + 1).getSuit() == card2.getSuit()) {
-                        if (board.get(index + 1).getRank().ordinal() == card2.getRank().ordinal() + 1) {
-                            moveCard(index, index2);
+                    } else {
+                        if (board.get(index - 1).getSuit() == card2.getSuit()) {
+                            if (board.get(index - 1).getRank().ordinal() == card2.getRank().ordinal() - 1) {
+                                moveCard(index, index2);
+                                return;
+                            }
+                        }
+                        if (board.get(index + 1).getSuit() == card2.getSuit()) {
+                            if (board.get(index + 1).getRank().ordinal() == card2.getRank().ordinal() + 1) {
+                                moveCard(index, index2);
+                            }
                         }
                     }
                 }
