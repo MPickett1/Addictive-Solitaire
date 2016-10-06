@@ -2,14 +2,10 @@ package main;
 
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 
-import java.util.Collections;
 
 /**
  * Created by Mike P on 10/4/2016.
@@ -28,6 +24,7 @@ public class GameBoardController {
     @FXML
     public void initialize(){
         gameBoard.getChildren().clear();
+        gameLogic.getBoard().clear();
         for(int i = 1; i <= 4; i++){
             for(int j = 1; j <= 13; j++){
                 Card card = new Card(Card.Rank.values()[j], Card.Suit.values()[i]);
@@ -46,7 +43,6 @@ public class GameBoardController {
                             //TODO: check if it is a valid move.
                             gameLogic.moveCard((Card) gameBoard.getChildren().get(card1), btn);
                             card1 = -1;
-                            gameBoard.getChildren().clear();
                             gameLogic.checkMoves();
                             setBoard();
                             for(Node node : gameBoard.getChildren()){
@@ -62,12 +58,16 @@ public class GameBoardController {
                 });
             }
         }
+    }
 
-        Collections.shuffle(gameLogic.getBoard());
+    public void setGameRules(int shuffles, long seed){
+        gameLogic.setRules(shuffles, seed);
+        gameLogic.shuffle();
         setBoard();
     }
 
     private void setBoard(){
+        gameBoard.getChildren().clear();
         int x = 0;
         for (int y = 0; y < 52; y++){
             if(y%13 == 0 && y != 0)

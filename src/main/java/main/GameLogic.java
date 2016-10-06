@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 /**
  * Created by Mike P on 10/2/2016.
@@ -11,10 +12,17 @@ import java.util.Collections;
 public class GameLogic {
     private ObservableList<Card> board = FXCollections.observableArrayList();
     private static GameLogic _instance = new GameLogic();
+    private int shuffles;
+    private Random seed = new Random();
 
-    public GameLogic(){
+    public void setRules(int shuffles, long seed){
+        this.shuffles = shuffles;
+        this.seed.setSeed(seed);
     }
 
+    public void shuffle(){
+        Collections.shuffle(board, seed);
+    }
     public static GameLogic getInstance(){
         return _instance;
     }
@@ -94,7 +102,7 @@ public class GameLogic {
 
     public void checkMoves(){
         //TODO: Check if there are any moves left.
-        int i = 4;
+        int i = this.shuffles;
         for(Card card: board){
             if(card.getRank() == Card.Rank.ZERO) {
                 int index = board.indexOf(card);
@@ -131,7 +139,7 @@ public class GameLogic {
 
                 board.removeAll(locked);
 
-                Collections.shuffle(board);
+                shuffle();
                 for(Card card : locked){
                     if( card != null){
                         board.add(locked.indexOf(card), card);
