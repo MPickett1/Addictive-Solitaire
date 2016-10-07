@@ -2,6 +2,8 @@ package main;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -21,6 +23,7 @@ public class GameLogic {
     }
 
     public void shuffle(){
+
         Collections.shuffle(board, seed);
     }
     public static GameLogic getInstance(){
@@ -102,7 +105,7 @@ public class GameLogic {
 
     public void checkMoves(){
         //TODO: Check if there are any moves left.
-        int i = this.shuffles;
+        int i = 4;
         for(Card card: board){
             if(card.getRank() == Card.Rank.ZERO) {
                 int index = board.indexOf(card);
@@ -128,6 +131,7 @@ public class GameLogic {
             if(win){
                 System.out.println("You Win.");
             }else {
+                shuffles--;
                 ObservableList<Card> locked = FXCollections.observableArrayList();
                 for(Card card: board){
                     if(card.getLock() && card.getRank() != Card.Rank.ZERO){
@@ -139,6 +143,7 @@ public class GameLogic {
 
                 board.removeAll(locked);
 
+                showDialog("shuffle");
                 shuffle();
                 for(Card card : locked){
                     if( card != null){
@@ -157,6 +162,26 @@ public class GameLogic {
         }
     }
 
+    private void showDialog(String type){
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+
+        switch(type){
+            case "shuffle":
+                alert.setTitle("Shuffling...");
+                alert.setHeaderText("You have run out of moves!");
+                alert.setContentText("Now Shuffling.");
+                break;
+            case "win":
+                alert.setTitle("Winner!");
+                alert.setHeaderText("You have run out of moves!");
+                alert.setContentText("YOU WIN!");
+                break;
+            case "lose":
+                break;
+        }
+
+        alert.showAndWait();
+    }
     public boolean checkBoard(){
         for(int i = 0; i < 4; i++){
             for(int j = ((i*13)+1); j < board.size(); j++) {

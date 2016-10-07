@@ -22,7 +22,7 @@
       </VBox>
       <VBox fx:id="buttonContainer" alignment="CENTER" StackPane.alignment="CENTER">
          <children>
-            <Label text="Addictive Solitaire" />
+            <Label styleClass="title" text="Addictive Solitaire" />
             <MenuButton mnemonicParsing="false" text="New Game">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#newGame" text="New" />

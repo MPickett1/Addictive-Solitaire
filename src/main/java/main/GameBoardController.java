@@ -43,6 +43,7 @@ public class GameBoardController {
                             //TODO: check if it is a valid move.
                             gameLogic.moveCard((Card) gameBoard.getChildren().get(card1), btn);
                             card1 = -1;
+                            setBoard();
                             gameLogic.checkMoves();
                             setBoard();
                             for(Node node : gameBoard.getChildren()){

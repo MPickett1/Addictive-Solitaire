@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -57,11 +58,17 @@ public class MainMenuController {
         };
 
         Dialog dialog = new Dialog();
+        dialog.setTitle("Custome Game");
+        dialog.setHeaderText("Enter the number of shuffles.\n Enter the game number you would like to play.");
         VBox vBox = new VBox();
+        HBox hBox1 = new HBox();
+        HBox hBox2 = new HBox();
+        Label lblShuffle = new Label("Shuffles: ");
         TextField tfShuffle = new TextField();
         tfShuffle.promptTextProperty().setValue("Enter the number of shuffles");
         tfShuffle.setTextFormatter(new TextFormatter<>(filterNumber));
         TextField tfSeed = new TextField();
+        Label lblSeed = new Label("Game #: ");
         tfSeed.promptTextProperty().setValue("Enter the game seed");
         tfSeed.setTextFormatter(new TextFormatter<>(filterNumber));
 
@@ -71,7 +78,9 @@ public class MainMenuController {
             tfSeed.requestFocus();
         });
 
-        vBox.getChildren().addAll(tfShuffle, tfSeed);
+        hBox1.getChildren().addAll(lblShuffle, tfShuffle);
+        hBox2.getChildren().setAll(lblSeed, tfSeed);
+        vBox.getChildren().addAll(hBox1, hBox2);
         dialog.getDialogPane().setContent(vBox);
         dialog.getDialogPane().getButtonTypes().addAll(play, cancel);
 
