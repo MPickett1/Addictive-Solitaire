@@ -1,9 +1,19 @@
 package main;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.util.Duration;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -16,15 +26,19 @@ public class GameLogic {
     private static GameLogic _instance = new GameLogic();
     private int shuffles;
     private Random seed = new Random();
+    private LocalTime start = LocalTime.MIN, end = LocalTime.MIN;
+    private Timeline timeline;
+    private int score, highScore;
 
     public void setRules(int shuffles, long seed){
-        this.shuffles = shuffles;
+        this.shuffles = shuffles + 1;
         this.seed.setSeed(seed);
     }
 
     public void shuffle(){
-
         Collections.shuffle(board, seed);
+        shuffles--;
+
     }
     public static GameLogic getInstance(){
         return _instance;
@@ -128,10 +142,14 @@ public class GameLogic {
 
         if(i == 0){
             System.out.println("No more moves.");
-            if(win){
+            if(shuffles == 0){
+                showDialog("lose");
+                return;
+            }else if(win){
                 System.out.println("You Win.");
+                showDialog("win");
+                return;
             }else {
-                shuffles--;
                 ObservableList<Card> locked = FXCollections.observableArrayList();
                 for(Card card: board){
                     if(card.getLock() && card.getRank() != Card.Rank.ZERO){
@@ -172,11 +190,28 @@ public class GameLogic {
                 alert.setContentText("Now Shuffling.");
                 break;
             case "win":
+                timeline.stop();
                 alert.setTitle("Winner!");
-                alert.setHeaderText("You have run out of moves!");
-                alert.setContentText("YOU WIN!");
+                alert.setHeaderText("Congratulations!");
+                if(isHighScore()){
+                    alert.setContentText("YOU WIN!\n" + "NEW HIGHSCORE!\n" + getScore() + "\n"
+                            + timeElapsed(end).format(DateTimeFormatter.ofPattern("HH:m:ss")));
+                }else {
+                    alert.setContentText("YOU WIN!\n" + "Score: " + getScore() + "\n"
+                            + timeElapsed(end).format(DateTimeFormatter.ofPattern("HH:m:ss")));
+                }
                 break;
             case "lose":
+                timeline.stop();
+                alert.setTitle("Loser!");
+                alert.setHeaderText("You have run out of shuffles!");
+                if(isHighScore()){
+                    alert.setContentText("YOU LOSE!\n" + "NEW HIGHSCORE!\n" + getScore());
+                }else {
+                    if(isHighScore()){
+                        alert.setContentText("YOU LOSE!\n" + "Score: " + getScore());
+                    }
+                }
                 break;
         }
 
@@ -209,6 +244,53 @@ public class GameLogic {
             }
         }
         return true;
+    }
+
+    private boolean isHighScore(){
+        if(score >= highScore)
+            return true;
+        else
+            return false;
+    }
+
+    private int getScore(){
+        board.forEach(card -> {
+            if (card.getLock())
+                score += 10;
+        });
+        return score;
+    }
+
+    private void setEndTime(){
+        end = LocalTime.now();
+    }
+
+    public void setStartTime(Label elapsedTime){
+        start = LocalTime.now();
+        timeline = new Timeline(new KeyFrame(Duration.seconds(0),
+                event -> {
+                    elapsedTime.setText(timeElapsed(LocalTime.now()).format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+                }),
+                new KeyFrame(Duration.seconds(1)));
+
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.playFromStart();
+        timeline.statusProperty().addListener(listener -> {
+            if(timeline.getStatus().equals(Timeline.Status.STOPPED))
+                setEndTime();
+                timeElapsed(end);
+        });
+    }
+
+    public LocalTime timeElapsed(LocalTime time){
+
+        long hour = start.until(time, ChronoUnit.HOURS);
+        time = time.minusHours(hour);
+        long min = start.until(time, ChronoUnit.MINUTES);
+        time = time.minusMinutes(min);
+        long sec = start.until(time, ChronoUnit.SECONDS);
+
+        return time.withHour((int) hour).withMinute((int) min).withSecond((int) sec).withNano(0);
     }
 
 }

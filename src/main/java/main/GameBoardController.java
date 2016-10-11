@@ -1,10 +1,19 @@
 package main;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.util.Duration;
+
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 
 /**
@@ -17,6 +26,8 @@ public class GameBoardController {
     private GridPane gameBoard;
     @FXML
     private MenuBar menuBar;
+    @FXML
+    private Label elapsedTime, gameNum, score, highScore;
 
     private GameLogic gameLogic = GameLogic.getInstance();
     private static int card1 = -1;
@@ -59,6 +70,7 @@ public class GameBoardController {
                 });
             }
         }
+        gameLogic.setStartTime(elapsedTime);
     }
 
     public void setGameRules(int shuffles, long seed){
