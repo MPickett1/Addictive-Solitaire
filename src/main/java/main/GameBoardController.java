@@ -36,6 +36,14 @@ public class GameBoardController {
     public void initialize(){
         gameBoard.getChildren().clear();
         gameLogic.getBoard().clear();
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0),
+                value -> {
+                    score.setText("Score: " + gameLogic.getScore());
+                }),
+                new KeyFrame(Duration.seconds(1)));
+
+        timeline.setCycleCount(1);
+
         for(int i = 1; i <= 4; i++){
             for(int j = 1; j <= 13; j++){
                 Card card = new Card(Card.Rank.values()[j], Card.Suit.values()[i]);
@@ -51,12 +59,12 @@ public class GameBoardController {
                         if(card1 == -1){
                             card1 = gameBoard.getChildren().indexOf(btn);
                         }else{
-                            //TODO: check if it is a valid move.
                             gameLogic.moveCard((Card) gameBoard.getChildren().get(card1), btn);
                             card1 = -1;
                             setBoard();
                             gameLogic.checkMoves();
                             setBoard();
+                            timeline.playFromStart();
                             for(Node node : gameBoard.getChildren()){
                                 if(node.getClass().getSimpleName().equals("Card")){
                                     ((Card) node).selectedProperty().setValue(false);

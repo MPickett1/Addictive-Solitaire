@@ -9,11 +9,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.util.Duration;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -28,7 +26,7 @@ public class GameLogic {
     private Random seed = new Random();
     private LocalTime start = LocalTime.MIN, end = LocalTime.MIN;
     private Timeline timeline;
-    private int score, highScore;
+    private int score = 0, highScore = -1, testScore = 0;
 
     public void setRules(int shuffles, long seed){
         this.shuffles = shuffles + 1;
@@ -253,11 +251,15 @@ public class GameLogic {
             return false;
     }
 
-    private int getScore(){
+    public int getScore(){
+        testScore = 0;
         board.forEach(card -> {
-            if (card.getLock())
-                score += 10;
+            if (card.getLock() && !card.getRank().equals(Card.Rank.ZERO))
+                testScore += 10;
         });
+        if(testScore > score) {
+            score = testScore;
+        }
         return score;
     }
 
