@@ -24,11 +24,13 @@ public class SaveState{
     private final static String jp_score = "score";
 
     private StringProperty name = new SimpleStringProperty();
-    private ListProperty<ArrayList<String>> board = new SimpleListProperty<>();
+    private ObjectProperty<ArrayList<String>> board = new SimpleObjectProperty<>(new ArrayList<>());
     private IntegerProperty shuffles = new SimpleIntegerProperty();
     private LongProperty seed = new SimpleLongProperty();
     private IntegerProperty score = new SimpleIntegerProperty();
 
+    public SaveState(){}
+    
     public SaveState(List<Card> board, int shuffles, long seed, int score) {
         setBoard(board);
         setShuffles(shuffles);
@@ -37,13 +39,12 @@ public class SaveState{
     }
 
     @JsonIgnore
-    public ObservableList<ArrayList<String>> decompressBoard(List<Card> board){
-        ObservableList<ArrayList<String>> cards = FXCollections.observableArrayList();
-        ArrayList<String> card = new ArrayList<>();
+    public ArrayList<String> decompressBoard(List<Card> board){
+        ArrayList<String> cards = new ArrayList<>();
+
         for(Card c : board){
-            card.add(c.getRank().name() + ":" + c.getSuit().name());
+            cards.add(c.getRank().name() + ":" + c.getSuit().name());
         }
-        cards.add(card);
         return cards;
     }
 
@@ -63,17 +64,22 @@ public class SaveState{
     }
 
     @JsonProperty(jp_board)
+    public void setBoard(ArrayList<String> board){
+        this.board.set(board);
+    }
+
+    @JsonIgnore
     public void setBoard(List<Card> board){
         this.board.setValue(decompressBoard(board));
     }
 
     @JsonProperty(jp_board)
-    public ObservableList<ArrayList<String>> getBoard(){
+    public ArrayList<String> getBoard(){
         return board.get();
     }
 
     @JsonIgnore
-    public ListProperty<ArrayList<String>> boardProperty(){
+    public ObjectProperty<ArrayList<String>> boardProperty(){
         return board;
     }
 

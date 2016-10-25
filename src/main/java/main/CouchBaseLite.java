@@ -8,10 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -89,6 +86,38 @@ public class CouchBaseLite {
         return json;
     }
 
+    public SaveState loadGame(String name, Database db) throws CouchbaseLiteException {
+
+        System.out.println("CouchDispatch.java getFlight()");
+
+        Map<String, Object> properties = new HashMap<>();
+
+        QueryEnumerator q = db.createAllDocumentsQuery().run();
+
+        for(QueryRow res : q){
+            try{
+                if(res.getDocument().getProperties().get("name").equals(name)){
+                    properties.putAll(res.getDocument().getProperties());
+                    System.out.println("Load Game " + name);
+
+                    // Jackson Unmarshalling JSON with Unknown Properties - http://www.baeldung.com/jackson-deserialize-json-unknown-properties
+                    ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+                    mapper.enable(SerializationFeature.INDENT_OUTPUT);
+                    String json = mapper.writeValueAsString(properties);
+
+                    //  Convert Couch JSON to Flight object
+                    SaveState load = mapper.readValue(json, SaveState.class);
+                    return load;
+                }
+            }catch (NullPointerException e) {
+                System.out.println("CouchDispatch.java getFlight() New Flight");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+
+    }
     public void update(Database d, SaveState e){
         // Update station information
         try {

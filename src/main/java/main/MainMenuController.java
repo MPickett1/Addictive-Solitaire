@@ -1,5 +1,7 @@
 package main;
 
+import com.couchbase.lite.CouchbaseLiteException;
+import com.couchbase.lite.Database;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,6 +22,7 @@ import java.util.function.UnaryOperator;
  * Created by Mike P on 10/3/2016.
  */
 public class MainMenuController {
+    private CouchBaseLite couchBaseLite = CouchBaseLite.getInstance();
 
     @FXML
     private void newGame(){
@@ -96,8 +99,18 @@ public class MainMenuController {
         }
     }
     @FXML
-    private void loadGame(){
+    private void loadGame() throws CouchbaseLiteException {
         //TODO: load a previous game
+        Database db = couchBaseLite.getDatabase("saves");
+        SaveState save = couchBaseLite.loadGame("Test", db);
+
+        System.out.println(save.getBoard());
+        System.out.println(save.getScore());
+        System.out.println(save.getSeed());
+        System.out.println(save.getShuffles());
+
+        System.out.println(db);
+
     }
 
     @FXML
