@@ -4,6 +4,8 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.io.Serializable;
+
 /**
  * Created by Mike P on 10/1/2016.
  */

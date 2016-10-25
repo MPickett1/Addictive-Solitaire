@@ -14,13 +14,14 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 /**
  * Created by Mike P on 10/2/2016.
  */
 public class GameLogic {
-    private ObservableList<Card> board = FXCollections.observableArrayList();
+    private List<Card> board = new ArrayList<>();
     private static GameLogic _instance = new GameLogic();
     private int shuffles;
     private Random seed = new Random();
@@ -38,6 +39,11 @@ public class GameLogic {
         shuffles--;
 
     }
+
+    public int getShuffles(){
+        return shuffles;
+    }
+
     public static GameLogic getInstance(){
         return _instance;
     }
@@ -55,10 +61,11 @@ public class GameLogic {
     }
 
     public void setBoard(ArrayList cards){
-        board.setAll(cards);
+        board.clear();
+        board.addAll(cards);
     }
 
-    public ObservableList<Card> getBoard(){
+    public List<Card> getBoard(){
         return board;
     }
 
@@ -76,10 +83,6 @@ public class GameLogic {
             if (index == 0 || index == 13 || index == 26 || index == 39) {
                 if (card2.getRank() == Card.Rank.Two) {
                     moveCard(index, index2);
-                }else if (board.get(index + 1).getSuit() == card2.getSuit()) {
-                    if (board.get(index + 1).getRank().ordinal() == card2.getRank().ordinal() + 1) {
-                        moveCard(index, index2);
-                    }
                 }
             } else if (index == 51 || index == 12 || index == 25 || index == 38) {
                 if (board.get(index - 1).getSuit() == card2.getSuit()) {
@@ -116,10 +119,10 @@ public class GameLogic {
     }
 
     public void checkMoves(){
-        //TODO: Check if there are any moves left.
         int i = 4;
         for(Card card: board){
             if(card.getRank() == Card.Rank.ZERO) {
+                card.setLock(false);
                 int index = board.indexOf(card);
                 if(index == 0 || index == 13 || index == 26 || index == 39)
                     break;
@@ -131,8 +134,6 @@ public class GameLogic {
                         card.setLock(true);
                         i--;
                     }
-                }else{
-                    card.setLock(false);
                 }
             }
         }

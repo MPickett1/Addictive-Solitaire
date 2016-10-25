@@ -1,5 +1,6 @@
 package main;
 
+import com.couchbase.lite.Database;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -11,6 +12,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -27,10 +31,12 @@ public class GameBoardController {
     @FXML
     private MenuBar menuBar;
     @FXML
-    private Label elapsedTime, gameNum, score, highScore;
+    private Label elapsedTime, gameNum, score;
 
     private GameLogic gameLogic = GameLogic.getInstance();
     private static int card1 = -1;
+    private long seed;
+    private CouchBaseLite couchBaseLite = CouchBaseLite.getInstance();
 
     @FXML
     public void initialize(){
@@ -70,7 +76,6 @@ public class GameBoardController {
                                     ((Card) node).selectedProperty().setValue(false);
                                 }
                             }
-
                         }
                     }else {
                         card1 = -1;
@@ -82,6 +87,8 @@ public class GameBoardController {
     }
 
     public void setGameRules(int shuffles, long seed){
+        this.seed = seed;
+        gameNum.setText("Game #: " + seed);
         gameLogic.setRules(shuffles, seed);
         gameLogic.shuffle();
         setBoard();
@@ -95,5 +102,19 @@ public class GameBoardController {
                 x++;
             gameBoard.add(gameLogic.getBoard().get(y), y%13, x);
         }
+    }
+
+    @FXML
+    public void saveGame(){
+        Database db = couchBaseLite.getDatabase("saves");
+        SaveState save = new SaveState(gameLogic.getBoard(), gameLogic.getShuffles(), seed, gameLogic.getScore());
+        save.setName("Test");
+        System.out.println(save.getBoard());
+        System.out.println(save.getScore());
+        System.out.println(save.getSeed());
+        System.out.println(save.getShuffles());
+
+        System.out.println(db);
+        couchBaseLite.update(db, save);
     }
 }

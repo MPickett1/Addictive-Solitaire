@@ -1,0 +1,124 @@
+package main;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import javax.xml.transform.TransformerException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Created by Mike P on 10/14/2016.
+ */
+public class SaveState{
+    private final static String jp_name = "name";
+    private final static String jp_board = "board";
+    private final static String jp_shuffles = "shuffles";
+    private final static String jp_seed = "seed";
+    private final static String jp_score = "score";
+
+    private StringProperty name = new SimpleStringProperty();
+    private ListProperty<ArrayList<String>> board = new SimpleListProperty<>();
+    private IntegerProperty shuffles = new SimpleIntegerProperty();
+    private LongProperty seed = new SimpleLongProperty();
+    private IntegerProperty score = new SimpleIntegerProperty();
+
+    public SaveState(List<Card> board, int shuffles, long seed, int score) {
+        setBoard(board);
+        setShuffles(shuffles);
+        setSeed(seed);
+        setScore(score);
+    }
+
+    @JsonIgnore
+    public ObservableList<ArrayList<String>> decompressBoard(List<Card> board){
+        ObservableList<ArrayList<String>> cards = FXCollections.observableArrayList();
+        ArrayList<String> card = new ArrayList<>();
+        for(Card c : board){
+            card.add(c.getRank().name() + ":" + c.getSuit().name());
+        }
+        cards.add(card);
+        return cards;
+    }
+
+    @JsonProperty(jp_name)
+    public void setName(String name){
+        this.name.set(name);
+    }
+
+    @JsonProperty(jp_name)
+    public String getName(){
+        return name.get();
+    }
+
+    @JsonIgnore
+    public StringProperty nameProperty(){
+        return name;
+    }
+
+    @JsonProperty(jp_board)
+    public void setBoard(List<Card> board){
+        this.board.setValue(decompressBoard(board));
+    }
+
+    @JsonProperty(jp_board)
+    public ObservableList<ArrayList<String>> getBoard(){
+        return board.get();
+    }
+
+    @JsonIgnore
+    public ListProperty<ArrayList<String>> boardProperty(){
+        return board;
+    }
+
+    @JsonProperty(jp_shuffles)
+    public void setShuffles(int shuffles){
+        this.shuffles.set(shuffles);
+    }
+
+    @JsonProperty(jp_shuffles)
+    public int getShuffles(){
+        return shuffles.get();
+    }
+
+    @JsonIgnore
+    public IntegerProperty shufflesProperty(){
+        return shuffles;
+    }
+
+    @JsonProperty(jp_seed)
+    public void setSeed(long seed){
+        this.seed.set(seed);
+    }
+
+    @JsonProperty(jp_seed)
+    public long getSeed(){
+        return seed.get();
+    }
+
+    @JsonIgnore
+    public LongProperty seedProperty(){
+        return seed;
+    }
+
+    @JsonProperty(jp_score)
+    public void setScore(int score){
+        this.score.set(score);
+    }
+
+    @JsonProperty(jp_score)
+    public int getScore(){
+        return score.get();
+    }
+
+    @JsonIgnore
+    public IntegerProperty scoreProperty(){
+        return score;
+    }
+}
