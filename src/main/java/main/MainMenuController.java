@@ -2,16 +2,21 @@ package main;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
+import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -22,7 +27,48 @@ import java.util.function.UnaryOperator;
  * Created by Mike P on 10/3/2016.
  */
 public class MainMenuController {
-    private CouchBaseLite couchBaseLite = CouchBaseLite.getInstance();
+    @FXML
+    private StackPane bgContainer;
+    @FXML
+    private ImageView background;
+    private Timeline timeline;
+    private ImageView[] slides = new ImageView[4];
+    private SequentialTransition slideshow = new SequentialTransition();
+
+    @FXML
+    public void initialize(){
+        bgContainer.getChildren().clear();
+        slides[0] = new ImageView(new Image("images/AC.png"));
+        slides[1] = new ImageView(new Image("images/AS.png"));
+        slides[2] = new ImageView(new Image("images/AH.png"));
+        slides[3] = new ImageView(new Image("images/AD.png"));
+
+        for(ImageView slide : slides){
+            slide.setTranslateX(slide.getImage().getWidth());
+        }
+
+        bgContainer.getChildren().addAll(slides);
+
+        for(ImageView slide : slides){
+            SequentialTransition seq = new SequentialTransition();
+
+            TranslateTransition peekIn = new TranslateTransition(Duration.millis(2000), slide);
+            PauseTransition stop = new PauseTransition(Duration.millis(2000));
+            TranslateTransition peekOut = new TranslateTransition(Duration.millis(2000), slide);
+
+            peekIn.setFromX(slide.getImage().getWidth());
+            peekIn.setToX(0);
+
+            peekOut.setFromX(0);
+            peekOut.setToX(-1*(slide.getImage().getWidth()));
+
+            seq.getChildren().addAll(peekIn, stop, peekOut);
+            slideshow.getChildren().add(seq);
+        }
+        slideshow.setAutoReverse(true);
+        slideshow.setCycleCount(Animation.INDEFINITE);
+        slideshow.play();
+    }
 
     @FXML
     private void newGame(){
