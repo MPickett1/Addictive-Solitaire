@@ -18,6 +18,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.Random;
@@ -32,39 +33,39 @@ public class MainMenuController {
     @FXML
     private ImageView background;
     private Timeline timeline;
-    private ImageView[] slides = new ImageView[4];
+    private ImageView[] slides;
     private SequentialTransition slideshow = new SequentialTransition();
 
     @FXML
     public void initialize(){
         bgContainer.getChildren().clear();
-        slides[0] = new ImageView(new Image("images/AC.png"));
-        slides[1] = new ImageView(new Image("images/AS.png"));
-        slides[2] = new ImageView(new Image("images/AH.png"));
-        slides[3] = new ImageView(new Image("images/AD.png"));
+        File dir = new File("src/main/resources/images");
+        File[] fileList = dir.listFiles();
 
-        for(ImageView slide : slides){
-            slide.setTranslateX(slide.getImage().getWidth());
-        }
+        slides = new ImageView[fileList.length];
 
-        bgContainer.getChildren().addAll(slides);
+        for(int i = 0; i < slides.length; i++){
+            slides[i] = new ImageView(new Image(fileList[i].getPath().substring(19)));
+            slides[i].setTranslateX(slides[i].getImage().getWidth());
 
-        for(ImageView slide : slides){
             SequentialTransition seq = new SequentialTransition();
 
-            TranslateTransition peekIn = new TranslateTransition(Duration.millis(2000), slide);
+            TranslateTransition peekIn = new TranslateTransition(Duration.millis(2000), slides[i]);
             PauseTransition stop = new PauseTransition(Duration.millis(2000));
-            TranslateTransition peekOut = new TranslateTransition(Duration.millis(2000), slide);
+            TranslateTransition peekOut = new TranslateTransition(Duration.millis(2000), slides[i]);
 
-            peekIn.setFromX(slide.getImage().getWidth());
+            peekIn.setFromX(slides[i].getImage().getWidth());
             peekIn.setToX(0);
 
             peekOut.setFromX(0);
-            peekOut.setToX(-1*(slide.getImage().getWidth()));
+            peekOut.setToX(-1*(slides[i].getImage().getWidth()));
 
             seq.getChildren().addAll(peekIn, stop, peekOut);
             slideshow.getChildren().add(seq);
         }
+
+        bgContainer.getChildren().addAll(slides);
+        
         slideshow.setAutoReverse(true);
         slideshow.setCycleCount(Animation.INDEFINITE);
         slideshow.play();
