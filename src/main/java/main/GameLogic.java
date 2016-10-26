@@ -60,7 +60,7 @@ public class GameLogic {
         }
     }
 
-    public void setBoard(ArrayList cards){
+    public void setBoard(List<Card> cards){
         board.clear();
         board.addAll(cards);
     }

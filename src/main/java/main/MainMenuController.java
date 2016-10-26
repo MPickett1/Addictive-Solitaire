@@ -42,6 +42,7 @@ public class MainMenuController {
             e.printStackTrace();
         }
     }
+
     @FXML
     private void customGame(){
         int shuffles;
@@ -101,16 +102,17 @@ public class MainMenuController {
     @FXML
     private void loadGame() throws CouchbaseLiteException {
         //TODO: load a previous game
-        Database db = couchBaseLite.getDatabase("saves");
-        SaveState save = couchBaseLite.loadGame("Test", db);
-
-        System.out.println(save.getBoard());
-        System.out.println(save.getScore());
-        System.out.println(save.getSeed());
-        System.out.println(save.getShuffles());
-
-        System.out.println(db);
-
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/gameSlots.fxml"));
+            Parent root = loader.load();
+            GameSlotsController controller = loader.getController();
+            controller.loadGame();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML

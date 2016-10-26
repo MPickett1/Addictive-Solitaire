@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<BorderPane fx:controller="main.GameSlotsController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.91" xmlns:fx="http://javafx.com/fxml/1">
+    <top>
+        <Label fx:id="gameQuery" text="Load Game" BorderPane.alignment="CENTER" />
+    </top>
+    <center>
+      <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+         <children>
+            <HBox fx:id="hbox1" alignment="CENTER" prefHeight="100.0" prefWidth="300.0">
+               <children>
+                  <Button fx:id="btn1" mnemonicParsing="false" prefHeight="75.0" prefWidth="250.0" text="Slot 1" />
+               </children>
+            </HBox>
+            <HBox fx:id="hbox2" alignment="CENTER" prefHeight="100.0" prefWidth="100.0">
+               <children>
+                  <Button fx:id="btn2" mnemonicParsing="false" prefHeight="75.0" prefWidth="250.0" text="Slot 2" />
+               </children>
+            </HBox>
+            <HBox fx:id="hbox3" alignment="CENTER" prefHeight="100.0" prefWidth="300.0">
+               <children>
+                  <Button fx:id="btn3" mnemonicParsing="false" prefHeight="75.0" prefWidth="250.0" text="Slot 3" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </center>
+   <bottom>
+      <Button fx:id="btnBack" onAction="#closeWindow" alignment="TOP_LEFT" contentDisplay="CENTER" mnemonicParsing="false" text="Back" BorderPane.alignment="TOP_LEFT" />
+   </bottom>
+</BorderPane>

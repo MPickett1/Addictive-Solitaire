@@ -87,9 +87,6 @@ public class CouchBaseLite {
     }
 
     public SaveState loadGame(String name, Database db) throws CouchbaseLiteException {
-
-        System.out.println("CouchDispatch.java getFlight()");
-
         Map<String, Object> properties = new HashMap<>();
 
         QueryEnumerator q = db.createAllDocumentsQuery().run();
@@ -98,7 +95,6 @@ public class CouchBaseLite {
             try{
                 if(res.getDocument().getProperties().get("name").equals(name)){
                     properties.putAll(res.getDocument().getProperties());
-                    System.out.println("Load Game " + name);
 
                     // Jackson Unmarshalling JSON with Unknown Properties - http://www.baeldung.com/jackson-deserialize-json-unknown-properties
                     ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -109,9 +105,7 @@ public class CouchBaseLite {
                     SaveState load = mapper.readValue(json, SaveState.class);
                     return load;
                 }
-            }catch (NullPointerException e) {
-                System.out.println("CouchDispatch.java getFlight() New Flight");
-            } catch (IOException e) {
+            }catch (NullPointerException | IOException e) {
                 e.printStackTrace();
             }
         }
@@ -121,8 +115,13 @@ public class CouchBaseLite {
     public void update(Database d, SaveState e){
         // Update station information
         try {
-        Document doc = d.getDocument(e.getName());
-            System.out.println(doc);
+        Document doc = d.getDocument(e.getId());
+
+        if(doc == null){
+            doc = d.createDocument();
+            e.setId(doc.getId());
+        }
+
         String json = entityToJson(e);
         ObjectMapper mapper = new ObjectMapper().configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
